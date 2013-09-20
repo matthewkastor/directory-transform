@@ -5,11 +5,14 @@
     stupid : true
 */
 /**
- * A node module for copying directories and running transforms over file
- *  contents, file names, and folder names.
  * @fileOverview A node module for copying directories and running transforms
  *  over file contents, file names, and folder names.
  * @author <a href="mailto:matthewkastor@gmail.com">Matthew Kastor</a>
+ */
+/**
+ * The module.
+ * @namespace The module.
+ * @name module
  */
 /**
  * Copies a directory, running the file contents, file name, and directory names
@@ -32,7 +35,9 @@
  * @param {Boolean} followLinks When set to true symlinks will be followed.
  *  This determines whether fs.stat or fs.lstat is used in determining whether
  *  an item in the directory is a file or directory.
- * @example Default transform functions.
+ * @example 
+ *  // Default transform functions.
+ * 
  *  // This is the default set of transformFns. By specifying a transform function
  *  // you will override the defaults. This means that if you do not specify any
  *  // transform functions then the input directory will be copied to the output
@@ -50,8 +55,10 @@
  *                  return dir;
  *              }
  *          };
- * @example Transforming a directory using mustache.
- * // this example is in the examples directory with plenty of comments.
+ * @example
+ *  // Transforming a directory using mustache.
+ * 
+ *  // this example is in the examples directory with plenty of comments.
  *  var customName = process.argv[2];
  *  var directoryTransform = require('directory-transform');
  *  var transformFns = {

@@ -1,6 +1,7 @@
 # directory-transform
 
-Project description
+A node module for copying directories and running transforms over file contents,
+ file names, and folder names.
 
 ## Installation
 
