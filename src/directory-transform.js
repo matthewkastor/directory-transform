@@ -32,7 +32,7 @@
  * @param {Boolean} followLinks When set to true symlinks will be followed.
  *  This determines whether fs.stat or fs.lstat is used in determining whether
  *  an item in the directory is a file or directory.
- * @example
+ * @example Default transform functions.
  *  // This is the default set of transformFns. By specifying a transform function
  *  // you will override the defaults. This means that if you do not specify any
  *  // transform functions then the input directory will be copied to the output
