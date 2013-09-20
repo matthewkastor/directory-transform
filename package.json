@@ -3,26 +3,19 @@
   "version": "0.0.0",
   "description": "empty package",
   "main": "./src/directory-transform.js",
-  "bin" : {
-    "directory-transform" : "./bin/cli.js"
-  },
   "directories": {
     "lib": "src",
-    "bin": "bin",
     "doc": "docs",
     "example": "examples"
   },
   "devDependencies": {
     "atropa-jsformatter": ">=0.1.2",
     "atropa-jslint": ">=0.1.2",
-    "browserify": ">=2.29.1",
     "jasmine-node": ">=1.11.0",
     "jsdoc-toolkit": "git+https://github.com/matthewkastor/node-jsdoc-toolkit.git#fix-tests"
   },
   "scripts": {
-    "start": "node start.js",
     "test": "jasmine-node specs/",
-    "buildBrowserModule" : "node dev/browserify.js",
     "buildDocs": "jsdoc-toolkit -v -d=./docs/jsdoc/ -r -s src/",
     "lint" : "atropa-jslint ./src/directory-transform.js",
     "srcFormat" : "atropa-jsformatter ./src/directory-transform.js ./src/directory-transform.js"
@@ -49,7 +42,7 @@
     }
   ],
   "dependencies": {
-    "dir-stats-sync": "~0.1.0",
-    "stream-copy-file": "~0.1.0"
+    "dir-stats-sync": ">=0.1.0",
+    "stream-copy-file": ">=0.1.0"
   }
 }
