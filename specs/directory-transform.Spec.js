@@ -1,11 +1,25 @@
-var directoryTransform = require('../src/directory-transform.js');
-var fs = require('fs');
-var path = require('path');
-
-
+/*jslint
+    white: true,
+    vars: true,
+    node: true,
+    stupid: true,
+    regexp: true,
+    nomen: true
+*/
+/*globals
+    describe,
+    beforeEach,
+    afterEach,
+    it,
+    expect
+*/
 describe('directory-transform', function () {
-    var directoryTransform = require('directory-transform');
-    
+    "use strict";
+    var directoryTransform = require('../src/directory-transform');
+    var fixtureVars = {
+        itemName : 'a-item',
+        itemContents : 'file-contents'
+    };
     function camelize (str) {
         return str.replace(/[^a-zA-Z0-9_]+./g, function (match) {
             return match[1].toUpperCase();
@@ -13,13 +27,12 @@ describe('directory-transform', function () {
     }
     var transformFns = {
         onFile : function transformFns_onFile (infile, outfile) {
-            "use strict";
             var fs = require('fs');
             var content;
             try {
                 content = fs.readFileSync(infile, "utf8");
                 content = camelize(content);
-                outfile = camelize(outFile);
+                outfile = camelize(outfile);
                 fs.writeFileSync(outfile, content, {
                     flag : 'w',
                     mode : fs.statSync(infile).mode
@@ -27,10 +40,10 @@ describe('directory-transform', function () {
             } catch (err) {
                 throw err;
             }
-        }
+        },
         onDir : function transformFns_onDir (dir) {
-            
-        };
+            return camelize(dir);
+        }
     };
     
     function getPaths (itemName) {
@@ -67,24 +80,23 @@ describe('directory-transform', function () {
     }
     
     beforeEach(function () {
-        var itemName = 'a-item';
         try {
-            destroyTestData(itemName);
+            destroyTestData(fixtureVars.itemName);
         } catch (ignore) {
             // the data isn't supposed to exist, just destroying in case of
             // previous test failure.
         }
         try {
-            createTestData(itemName, 'file-contents');
+            createTestData(fixtureVars.itemName, fixtureVars.itemContents);
         } catch (e) {
             console.log(e);
             throw new Error('could not create test data');
         }
     });
+    /*
     afterEach(function () {
-        
         try {
-            destroyTestData('a-item');
+            destroyTestData(fixtureVars.itemName);
         } catch (e) {
             console.log(e);
             throw new Error('could not destroy test data');
@@ -99,11 +111,15 @@ describe('directory-transform', function () {
     it('must transform file contents, names, and directory names', function () {
     
     });
-});
-directoryTransform(
+    
+    
+    directoryTransform(
         './aDirectory/',
         './' + customName,
         transformFns,
         true,
         false
     );
+    */
+});
+
