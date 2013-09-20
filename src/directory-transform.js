@@ -56,7 +56,7 @@
  *              }
  *          };
  * @example
- *  // Transforming a directory using mustache.
+ *  // Transforming a directory recursively using mustache.
  * 
  *  // this example is in the examples directory with plenty of comments.
  *  var customName = process.argv[2];

@@ -14,9 +14,46 @@ npm install directory-transform
 In node:
 
 ```
+// Transforming a directory recursively using mustache.
+
+// this example is in the examples directory with plenty of comments.
+var customName = process.argv[2];
 var directoryTransform = require('directory-transform');
-console.log(directoryTransform(''));
+var transformFns = {
+    onFile : function transformFns_onFile (infile, outfile) {
+        "use strict";
+        function camelize (str) {
+            return str.replace(/[^a-zA-Z0-9_]+./g, function (match) {
+                return match[1].toUpperCase();
+            });
+        }
+        var mustache = require('mustache');
+        var fs = require('fs');
+        var content;
+        var view = {
+            customName : customName
+        };
+        view.camelizedCustomName = camelize(view.customName);
+        try {
+            content = fs.readFileSync(infile, "utf8");
+            content = mustache.render(content, view);
+            outfile = mustache.render(outfile, view);
+            fs.writeFileSync(outfile, content, {
+                flag : 'w',
+                mode : fs.statSync(infile).mode
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+};
+directoryTransform(
+        './aDirectory/',
+        './' + customName,
+        transformFns,
+        true,
+        false
+    );
 ```
 
-In the browser, include `./browser/directory-transform_web.js` in your page. `directoryTransform` will
- be available in your page.
+Full documentation is available in the docs folder.
