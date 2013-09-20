@@ -4,21 +4,21 @@
     node : true,
     stupid : true
 */
-function directoryTransform (indir, outdir, transformFns, recurse, followLinks) {
-    "use strict";
+function directoryTransform(indir, outdir, transformFns, recurse, followLinks) {
+    'use strict';
     var defaultTransformFns = {
-        onFile : function defaultTransformFns_onFile (infile, outfile) {
-            var streamCopyFile = require('stream-copy-file');
-            streamCopyFile(infile, outfile, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-            });
-        },
-        onDir : function defaultTransformFns_onDir (dir) {
-            return dir;
-        }
-    };
+            onFile: function defaultTransformFns_onFile(infile, outfile) {
+                var streamCopyFile = require('stream-copy-file');
+                streamCopyFile(infile, outfile, function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            },
+            onDir: function defaultTransformFns_onDir(dir) {
+                return dir;
+            }
+        };
     // mandatory args
     if (!indir) {
         throw new Error('indir must be specified');
@@ -33,23 +33,20 @@ function directoryTransform (indir, outdir, transformFns, recurse, followLinks) 
             transformFns[fn] = defaultTransformFns[fn];
         }
     });
-    recurse = !!recurse; // coerce boolean
+    recurse = !!recurse;
+    // coerce boolean
     var statType = followLinks ? 'statDir' : 'lstatDir';
-    
     var fs, path, resolved;
-    
     try {
         fs = require('fs');
         path = require('path');
-        
         resolved = {
-            indir : path.resolve(indir),
-            outdir : path.resolve(outdir)
+            indir: path.resolve(indir),
+            outdir: path.resolve(outdir)
         };
-        if(resolved.indir === resolved.outdir) {
+        if (resolved.indir === resolved.outdir) {
             throw new Error('indir and outdir can not refer to the same location');
         }
-        
         try {
             fs.mkdirSync(resolved.outdir, fs.statSync(indir).mode);
         } catch (err) {
@@ -58,7 +55,6 @@ function directoryTransform (indir, outdir, transformFns, recurse, followLinks) 
             }
         }
         var dirStatsSync = require('dir-stats-sync');
-        
         dirStatsSync[statType](resolved.indir, function (file, stat) {
             var infile = path.resolve(resolved.indir, file);
             var outfile = path.resolve(resolved.outdir, file);
@@ -69,11 +65,9 @@ function directoryTransform (indir, outdir, transformFns, recurse, followLinks) 
             if (stat.isFile()) {
                 transformFns.onFile(infile, outfile);
             }
-        
         });
     } catch (err) {
         throw err;
     }
 }
-
 module.exports = directoryTransform;
