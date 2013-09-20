@@ -102,17 +102,6 @@ describe('directory-transform', function () {
             throw new Error('could not destroy test data');
         }
     });
-    it('must default to a single level copy operation', function () {
-    
-    });
-    it('must recursively copy', function () {
-    
-    });
-    it('must transform file contents, names, and directory names', function () {
-    
-    });
-    
-    
     directoryTransform(
         './aDirectory/',
         './' + customName,
@@ -120,6 +109,17 @@ describe('directory-transform', function () {
         true,
         false
     );
+    it('must default to a single level copy operation', function () {
+    
+    });
+    it('must recursively copy', function () {
+    
+    });
     */
+    it('must transform file contents, names, and directory names', function () {
+    
+    });
+    
+    
 });
 
