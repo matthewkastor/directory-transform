@@ -16,7 +16,8 @@
 var customName = process.argv[2];
 var directoryTransform = require('directory-transform');
 
-// Specifying the transform functions to use.
+// Specifying the transform functions to use. Note that directory names are not
+// handled (onDir), so the default directory name transform function will be used.
 var transformFns = {
     // this transform function will only be called on files
     onFile : function transformFns_onFile (infile, outfile) {
