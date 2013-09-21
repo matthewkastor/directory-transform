@@ -41,7 +41,8 @@
  *  // This is the default set of transformFns. By specifying a transform function
  *  // you will override the defaults. This means that if you do not specify any
  *  // transform functions then the input directory will be copied to the output
- *  // directory.
+ *  // directory if recurse is set true, otherwise it will simply copy the files
+ *  // from the input directory to the output directory.
  *  var defaultTransformFns = {
  *              onFile: function defaultTransformFns_onFile(infile, outfile) {
  *                  var streamCopyFile = require('stream-copy-file');
