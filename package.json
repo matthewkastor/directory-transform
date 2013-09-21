@@ -1,6 +1,6 @@
 {
   "name": "directory-transform",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A node module for copying directories and running transforms over file contents, file names, and folder names.",
   "main": "./src/directory-transform.js",
   "directories": {
