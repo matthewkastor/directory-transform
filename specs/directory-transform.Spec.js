@@ -11,115 +11,142 @@
     beforeEach,
     afterEach,
     it,
-    expect
+    expect,
+    runs,
+    waitsFor,
 */
-describe('directory-transform', function () {
-    "use strict";
-    var directoryTransform = require('../src/directory-transform');
-    var fixtureVars = {
-        itemName : 'a-item',
-        itemContents : 'file-contents'
-    };
-    function camelize (str) {
-        return str.replace(/[^a-zA-Z0-9_]+./g, function (match) {
-            return match[1].toUpperCase();
-        });
+"use strict";
+var directoryTransform = require('../src/directory-transform');
+var fs = require('fs');
+var path = require('path');
+
+function camelize (str) {
+    return str.replace(/[^a-zA-Z0-9_]+./g, function (match) {
+        return match[1].toUpperCase();
+    });
+}
+var transformFns = {
+    onFile : function transformFns_onFile (infile, outfile) {
+        var content;
+        try {
+            content = fs.readFileSync(infile, "utf8");
+            content = camelize(content);
+            outfile = outfile.replace(/a\-item/g, 'aItem');
+            fs.writeFileSync(outfile, content, {
+                flag : 'w',
+                mode : fs.statSync(infile).mode
+            });
+        } catch (err) {
+            throw err;
+        }
+    },
+    onDir : function transformFns_onDir (dir) {
+        return dir.replace(/a\-item/g, 'aItem');
     }
-    var transformFns = {
-        onFile : function transformFns_onFile (infile, outfile) {
-            var fs = require('fs');
-            var content;
-            try {
-                content = fs.readFileSync(infile, "utf8");
-                content = camelize(content);
-                outfile = camelize(outfile);
-                fs.writeFileSync(outfile, content, {
-                    flag : 'w',
-                    mode : fs.statSync(infile).mode
-                });
-            } catch (err) {
-                throw err;
+};
+function exists (pathRelativeTo__dirname) {
+    return fs.existsSync(path.resolve(__dirname, pathRelativeTo__dirname));
+}
+function deleteFile (pathRelativeTo__dirname) {
+    fs.unlinkSync(path.resolve(__dirname, pathRelativeTo__dirname));
+}
+function deleteDir (pathRelativeTo__dirname) {
+    fs.rmdirSync(path.resolve(__dirname, pathRelativeTo__dirname));
+}
+function deleteTree (pathRelativeTo__dirname) {
+    var where = path.resolve(__dirname, pathRelativeTo__dirname);
+    var files = fs.readdirSync(where);
+    files.forEach(function (file) {
+        var fileLoc = path.resolve(where, file);
+        if (fs.statSync(fileLoc).isDirectory()) {
+            deleteTree(path.relative(__dirname, fileLoc));
+        } else {
+            deleteFile(path.relative(__dirname, fileLoc));
+        }
+    });
+    deleteDir(pathRelativeTo__dirname);
+}
+
+describe('setup', function () {
+    it('must create the specs/tmp folder', function () {
+        runs(function () {
+            if(exists('tmp')) {
+                deleteTree('tmp');
             }
-        },
-        onDir : function transformFns_onDir (dir) {
-            return camelize(dir);
-        }
-    };
-    
-    function getPaths (itemName) {
-        var path = require('path');
-        var itemPath = path.resolve(__dirname, itemName); // ./a-item
-        var subItemPath = path.resolve(itemPath, itemName); // ./a-item/a-item
-        var camelizedItemPath = camelize(itemPath);
-        var camelizedSubItemPath = camelize(subItemPath);
-        return {
-            itemPath : itemPath,
-            subItemPath : subItemPath,
-            camelizedItemPath : camelizedItemPath,
-            camelizedSubItemPath : camelizedSubItemPath
-        };
-    }
-    
-    function createTestData (itemName, contents) {
-        var fs = require('fs');
-        var paths = getPaths(itemName);
-        fs.writeFileSync(paths.itemPath, contents);
-        fs.mkdirSync(paths.itemPath);
-        fs.writeFileSync(paths.subItemPath, contents);
-    }
-    
-    function destroyTestData (itemName) {
-        var fs = require('fs');
-        var paths = getPaths(itemName);
-        fs.unlinkSync(paths.itemPath);
-        fs.unlinkSync(paths.subItemPath);
-        fs.rmdirSync(paths.itemName);
-        fs.unlinkSync(paths.camelizedItemPath);
-        fs.unlinkSync(paths.camelizedSubItemPath);
-        fs.rmdirSync(paths.camelizedItemName);
-    }
-    
-    beforeEach(function () {
-        try {
-            destroyTestData(fixtureVars.itemName);
-        } catch (ignore) {
-            // the data isn't supposed to exist, just destroying in case of
-            // previous test failure.
-        }
-        try {
-            createTestData(fixtureVars.itemName, fixtureVars.itemContents);
-        } catch (e) {
-            console.log(e);
-            throw new Error('could not create test data');
-        }
+        });
+        waitsFor(function () {
+            return exists('tmp') === false;
+        }, 'old specs/tmp must be deleted.', 3000);
+        runs(function () {
+            fs.mkdirSync(path.resolve(__dirname, 'tmp'));
+            expect(exists('tmp')).toEqual(true);
+        });
     });
-    /*
-    afterEach(function () {
-        try {
-            destroyTestData(fixtureVars.itemName);
-        } catch (e) {
-            console.log(e);
-            throw new Error('could not destroy test data');
-        }
-    });
-    directoryTransform(
-        './aDirectory/',
-        './' + customName,
-        transformFns,
-        true,
-        false
-    );
-    it('must default to a single level copy operation', function () {
-    
-    });
-    it('must recursively copy', function () {
-    
-    });
-    */
-    it('must transform file contents, names, and directory names', function () {
-    
-    });
-    
-    
 });
 
+describe('directory-transform', function () {
+    it('must default to copying only files from indir', function () {
+        runs(function () {
+            directoryTransform(
+                path.resolve(__dirname, 'testData'), // input dir
+                path.resolve(__dirname, 'tmp/1')       // output dir
+            );
+        });
+        
+        waitsFor(function () {
+            return exists('tmp/1/a-item.txt');
+        }, 'waiting for specs/tmp/1/a-item.txt to exist', 2000);
+        
+        runs(function () {
+            expect(exists('tmp/1/a-item.txt')).toEqual(true);
+            expect(exists('tmp/1/a-item')).toEqual(false);
+        });
+    });
+    it('must recursively copy', function () {
+        runs(function () {
+            directoryTransform(
+                path.resolve(__dirname, 'testData'), // input dir
+                path.resolve(__dirname, 'tmp/2'),      // output dir
+                null,                                // transform functions
+                true,                                // recurse
+                false                                // follow symlinks
+            );
+        });
+        
+        waitsFor(function () {
+            return exists('tmp/2/a-item/a-item.txt') && exists('tmp/2/a-item.txt');
+        }, 'waiting for specs/tmp/2/a-item/a-item.txt to exist', 2000);
+        
+        runs(function () {
+            expect(exists('tmp/2/a-item.txt')).toEqual(true);
+            expect(exists('tmp/2/a-item/a-item.txt')).toEqual(true);
+        });
+    });
+    it('must transform file contents, names, and directory names', function () {
+        runs(function () {
+            directoryTransform(
+                path.resolve(__dirname, 'testData'), // input dir
+                path.resolve(__dirname, 'tmp/3'),    // output dir
+                transformFns,                        // transform functions
+                true,                                // recurse
+                false                                // follow symlinks
+            );
+        });
+        
+        waitsFor(function () {
+            return exists('tmp/3/aItem/aItem.txt') && exists('tmp/3/aItem.txt');
+        }, 'waiting for specs/tmp/3/aItem/aItem.txt to exist', 2000);
+        
+        runs(function () {
+            var content = fs.readFileSync(
+                    path.resolve(__dirname, 'tmp/3/aItem/aItem.txt'),
+                    'utf8'
+                );
+            expect(exists('tmp/3/aItem.txt')).toEqual(true);
+            expect(exists('tmp/3/aItem/aItem.txt')).toEqual(true);
+            expect(content).toEqual('fileContent');
+        });
+    });
+    
+    deleteTree('tmp');
+});
