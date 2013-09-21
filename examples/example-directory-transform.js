@@ -1,4 +1,4 @@
-//#! /usr/bin/env node
+#! /usr/bin/env node
 // see https://npmjs.org/doc/json.html#bin for more info about the bin field of
 // package.json
 
