@@ -1,6 +1,6 @@
 {
   "name": "directory-transform",
-  "version": "0.1.1",
+  "version": "2022.11.16",
   "description": "A node module for copying directories and running transforms over file contents, file names, and folder names.",
   "main": "./src/directory-transform.js",
   "directories": {
@@ -17,28 +17,28 @@
   "scripts": {
     "test": "jasmine-node specs/",
     "buildDocs": "jsdoc-toolkit -v -d=./docs/jsdoc/ -r -s src/",
-    "lint" : "atropa-jslint ./src/directory-transform.js",
-    "srcFormat" : "atropa-jsformatter ./src/directory-transform.js ./src/directory-transform.js"
+    "lint": "atropa-jslint ./src/directory-transform.js",
+    "srcFormat": "atropa-jsformatter ./src/directory-transform.js ./src/directory-transform.js"
   },
-  "homepage" : "https://github.com/matthewkastor/directory-transform/",
-  "bugs" : "https://github.com/matthewkastor/directory-transform/issues",
+  "homepage": "https://github.com/matthewkastor/directory-transform/",
+  "bugs": "https://github.com/matthewkastor/directory-transform/issues",
   "repository": {
-    "type" : "git",
-    "url" : "git://github.com/matthewkastor/directory-transform.git"
+    "type": "git",
+    "url": "git://github.com/matthewkastor/directory-transform.git"
   },
   "keywords": [
     "directory-transform",
     "atropa"
   ],
   "author": {
-    "name"      : "Matthew Kastor",
-    "email"     : "matthewkastor@gmail.com",
-    "url"       : "https://plus.google.com/100898583798552211130"
+    "name": "Matthew Kastor",
+    "email": "matthewkastor@gmail.com",
+    "url": "https://plus.google.com/100898583798552211130"
   },
   "licenses": [
     {
-        "type" : "gpl-3.0",
-        "url" : "http://www.gnu.org/licenses/gpl-3.0-standalone.html"
+      "type": "gpl-3.0",
+      "url": "http://www.gnu.org/licenses/gpl-3.0-standalone.html"
     }
   ],
   "dependencies": {
