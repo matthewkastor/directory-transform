@@ -16,3 +16,4 @@ Desktop.ini
 $RECYCLE.BIN/
 /.vs
 /package-lock.json
+/node_modules
