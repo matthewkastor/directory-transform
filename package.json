@@ -9,14 +9,15 @@
     "example": "examples"
   },
   "devDependencies": {
-    "atropa-jsformatter": ">=0.1.2",
-    "atropa-jslint": ">=0.1.2",
+    "atropa-jsformatter": "git+https://github.com/matthewkastor/atropa-jsformatter.git#gh-pages",
+    "atropa-jslint": "git+https://github.com/matthewkastor/atropa-jslint.git#master",
     "jasmine-node": ">=1.11.0",
     "jsdoc-toolkit": "git+https://github.com/matthewkastor/node-jsdoc-toolkit.git#fix-tests"
   },
   "scripts": {
     "test": "jasmine-node specs/",
     "buildDocs": "jsdoc-toolkit -v -d=./docs/jsdoc/ -r -s src/",
+    "buildVsdocs": "jsdoc-toolkit -v -d=./docs/vsdoc/ -t=./node_modules/jsdoc-toolkit/templates/vsdoc/ -r -s src/",
     "lint": "atropa-jslint ./src/directory-transform.js",
     "srcFormat": "atropa-jsformatter ./src/directory-transform.js ./src/directory-transform.js"
   },
